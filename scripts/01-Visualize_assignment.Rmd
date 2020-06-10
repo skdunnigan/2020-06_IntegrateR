@@ -1,0 +1,174 @@
+---
+title: "Visualize Data"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+<!-- This file by Shannon Dunnigan was adapted from the orignal work at https://github.com/rstudio/master-the-tidyverse by RStudio. -->
+
+"r setup" is an optional label for a chunk, but it should always run once before anything else. In this setup we are loading the `tidyverse` and `here` packages. 
+
+```{r setup}
+library(tidyverse)
+library(here)
+```
+
+The `wq` data frame contains monthly averages of water quality data (e.g., temperature, salinity, dissolved oxygen, etc.) from six National Estuarine Research Reserves in the contiguous United States. *Notice the use of the `here` package in the code below.*
+
+```{r loaddata}
+wq <- read.csv(here::here('data', 'monthly_wq.csv')) 
+
+```
+
+**Tip**: Always be sure to check your data. You can use `head()`, `tail()`, or `str()` from the base package in `R`. Or one of our favorite quick an easy ways is `dplyr::glimpse()`. The `glimpse()` function from the `dplyr` package is a great all in one snapshot of the data.
+
+
+### Your Turn 1
+
+Run the code on the slide to make a graph. Pay strict attention to spelling, capitalization, and parentheses!
+
+```{r}
+
+
+```
+
+### Your Turn 2a
+
+Add `color`, `size`, `alpha`, and `shape` aesthetics to your graph. Experiment.  
+
+```{r}
+# original
+ggplot(data = wq) + 
+  geom_point(mapping = aes(x = temp, y = do_mgl))
+
+
+```
+
+### Your Turn 2b
+
+Using the `wq` data, plot temperature (`temp`) by `month` as a scatterplot and facet by `state` and `coast`. 
+Play around with `facet_grid()` and `facet_wrap()`. 
+
+*What kinds of things do you notice?*
+
+```{r}
+
+
+```
+
+
+### Your Turn 3 - Zoom whiteboard responses
+
+Replace this scatterplot with one that draws boxplots. Use the cheatsheet. Try your best guess.
+
+```{r}
+ggplot(data = wq) +
+  geom_point(mapping = aes(x = coast, y = temp)) 
+
+```
+
+
+### Your Turn 4
+
+Load the `diamonds` dataset and examine it. *ahem* Remember the `glimpse()` function? This data set contains prices and other attributes of diamonds and is provided by the `ggplot2` package.
+
+Create a bar chart of `cut` colored by `cut`. Use the cheatsheet. 
+
+```{r}
+diamonds
+
+```
+
+### Your Turn 5 - Zoom whiteboard
+
+Predict what this code will do. Then run it.
+
+```{r}
+ggplot(wq) +
+  geom_point(aes(temp, do_mgl)) +
+  geom_smooth(aes(temp, do_mgl)) 
+
+```
+
+# To Recap:
+
+To make a graph:
+
+1.    Pick your *data* set
+2.    Choose the best *geom* to display the cases
+3.    *Map* aesthetic properties to variables.
+4.    **Not required**, but defaults are supplied by the specified geom that you can then manually change.
+
+```{r, eval = FALSE}
+ggplot(data = <DATA>) +
+	<GEOM FUNCTION>(mapping = aes(<MAPPINGS>),
+				   stat = <STAT>, # not required, but sensible default applied.
+				   position = <POSITION>) # not required, but sensible default applied.
+```
+
+## Saving your plots
+
+*What does `getwd()` return?* Zoom whiteboard
+
+```{r}
+getwd()
+```
+
+
+## DAY 1 CHALLENGE
+
+Using the `diamonds` data make a scatterplot of `carat` by `price` and assign color by `clarity`. 
+Customize the themes and colors of the plot to make it the *ugliest* plot that you can. 
+Save this plot in your files pane.
+
+``` {r ugly}
+ggplot(data = diamonds) +
+  geom_point(aes(x = carat, y = price, color = clarity))
+```
+
+***
+
+# Take aways
+
+You can use this code template to make thousands of graphs with `ggplot2`.
+
+```{r, eval = FALSE}
+ggplot(data = <DATA>) +
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>),
+                  stat = <STAT>,
+                  position = <POSITION>) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION> +
+  <SCALE_FUNCTION> +
+  <THEME_FUNCTION>
+```
+
+*** 
+
+# For the sake of time
+
+Here are some areas for more practice on your own:
+
+### Find the default stat for geoms
+
+Determine what the default stat is for each of the following geoms (you can use the cheatsheet OR the help function in RStudio):
+
+-  `geom_line`
+-  `geom_density`
+-  `geom_smooth`
+
+```{r, eval = FALSE}
+?geom_line
+?geom_density
+?geom_smooth
+```
+
+## Saving plots
+
+Save the last plot and then locate it in the files pane.
+
+```{r, eval = FALSE}
+
+```
