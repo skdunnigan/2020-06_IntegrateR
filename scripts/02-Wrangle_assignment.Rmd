@@ -1,0 +1,410 @@
+---
+title: "02-Wrangle_assignment"
+output:
+  html_document:
+    toc: true
+    df_print: paged
+---
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(here)
+library(ggplot2)
+library(janitor)
+```
+
+# `dplyr` verbs
+
+We will use data downloaded from [eBird](https://ebird.org) to explore these. 
+
+First, let's read in the eBird data and explore it:  
+
+```{r}
+ebird <- read.csv(here::here("data", "eBird_workshop.csv"), stringsAsFactors = FALSE)
+
+# don't forget to check your data set
+
+
+
+
+# oops, there are duplicates, how do we address those?
+
+
+
+
+
+
+```
+
+## Choose _rows_: `filter()`  
+
+```{r}
+filter(ebird, state == 'AK')
+
+# and with the pipe? Type it below:
+
+
+```
+
+Notice a couple things here:  
+
++  We use `==` to specify an exact condition. If we were working with numbers, we could use:  
+    +  `<`  
+    +  `<=`  
+    +  `==`  
+    +  `!=` (**not** equal to)  
+    +  `>=`  
+    +  `>`  
++  The condition specified inside `filter()` MUST return either true or false, for each row.  
+
+
+How about for multiple conditions?
+
+```{r}
+ebird %>% 
+  filter(state == 'AK',
+         year == 2008)
+
+# how about more than one state? There are two ways to do it. Type them below:
+
+
+```
+
+Which was your favorite method? 
+
+[INSERT YOUR RESPONSE HERE]
+
+
+### Your Turn 1
+
+How could we pull out birds in Alaska (AK), before 2010? (*Hint: you can use the same symbols on year that you would use with any other numbers*)  
+
+```{r}
+
+```
+
+How would you filter the data to contain only the species "American Coot" from MS and FL (your instructors' states), in all years *except* 2010? Assign this object to a data frame and verify (using `unique()`) that you did it right.    
+
+```{r}
+
+```
+
+***
+
+## Choose _columns_: `select()`  
+
+When you're working with a lot of data, you may not want or need to keep all the columns you started with. In this case, `select()` is what you need. You can use it in two ways: 
+
+First, by selecting the columns we **do** want to keep. Or second, by using a `-` in front of the columns we **don't** want to keep. 
+
+```{r}
+# keep
+
+
+# don't keep
+
+
+```
+
+
+Order **does** matter in `select()`; remember it didn't matter in `filter()`. In `select()`, selections are made in the order specified - so if you want to rearrange the columns of your data, you can do it with this command!
+
+```{r}
+
+```
+
+
+### Your Turn 2  
+
+From the ebird data, subset to only include the species American Coot, from the states FL, AL, and MS. Keep only the state, year, and presence columns. What is the proper order of operations in this case?  
+
+```{r}
+
+```
+
+
+
+
+
+
+
+***
+
+*Setup for the next bit of the workshop*  
+
+We're going to switch datasets here, to one that's a little more complicated: water quality data! We downloaded monitoring data from several National Estuarine Research Reserves for the year 2016, and have already winnowed it down a bit to daily averages of several parameters that we measure. 
+
+We will use your newfound `select()` and `filter()` skills to make it an even smaller data frame, and then we'll learn how to calculate new columns and do group-wise summaries.  
+
+```{r}
+wq <- read.csv(here::here("data", "daily_wq.csv"), stringsAsFactors = FALSE)
+
+dplyr::glimpse(wq)
+```
+
+***
+
+### Your Turn 3
+
+Because this is so important, you have been provided working code in a chunk below. But please attempt it yourself first!!!  
+
+We have read in the daily water quality data for a few stations. Create a new data frame called `wq_trimmed` where, from `wq`, you:    
+
++  **Select** the following columns:  station_code, month, day, temp, sal, do_pct, and depth.  
++  **Filter** for rows where `depth` is *not* missing. (Hint: `is.na` is the function that checks to see if a value *is* missing. How would you look for "not" `is.na`?   It's similar to "not equal to" from above.)
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+### Your Turn 3 answer   
+
+Last chance to try it yourself.... 
+but if you didn't get it to work, run this chunk:  
+
+```{r}
+wq_trimmed <- wq %>% 
+    select(station_code, month, day, temp, sal, do_pct, depth) %>% 
+    filter(!is.na(depth))
+```
+
+How much has been removed from the data frame?  
+
+```{r}
+
+```
+
+Why did those rows go away? 
+
+[TYPE YOUR ANSWER HERE]
+
+***
+
+## Modifying data frames with `mutate()`  
+
+```{r}
+
+
+```
+
+
+### Your Turn 4  
+
+There are two parts to this. You can approach them separately or within the same series of pipes. Remember to save the result as the new, better, `wq_trimmed` data frame!   
+
+1.  Now that we've started creating more columns, it might make sense to get rid of some old ones. Remove `monthday` and `meaningless_thing` from the `wq_trimmed` data frame.  
+2.  The same person that wants to see `depth` in feet rather than meters *also* wants you to turn `temp` into Fahrenheit, from Celsius. You've looked up the conversion. Now create a new column, `temp_f`, with the new variable.   **F = (9/5)(temp in C) + 32**
+
+
+As with Your Turn 4, the answer is below. No peeking!  
+
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Your Turn 4 answer  
+
+```{r}
+wq_trimmed <- wq_trimmed %>% 
+    select(-monthday, -meaningless_thing) %>% 
+    mutate(temp_f = (9/5) * temp + 32)
+View(wq_trimmed)
+```
+
+
+***
+
+## Group-wise operations with `group_by()` and `summarize()` 
+
+Say we want to find out how many birds were seen by state in the ebird dataset. We can do that. These operations are also great for lumping data into daily, monthly, or yearly averages, which we'll do on the SWMP dataset.    
+
+```{r}
+
+```
+
+We can also group by combinations of multiple variables:  
+
+```{r}
+
+```
+
+
+
+### Your Turn 5  
+
+How would you group the `wq_trimmed` dataset to calculate monthly average temperature and salinity, and their standard deviations, at each station?  
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+### Your Turn 5 answer  
+
+```{r}
+wq_trimmed %>% 
+    group_by(station_code, month) %>% 
+    summarize(mean_temp = mean(temp, na.rm = TRUE),
+              sd_temp = sd(temp, na.rm = TRUE),
+              mean_sal = mean(sal, na.rm = TRUE),
+              sd_sal = sd(sal, na.rm = TRUE)) %>% 
+    View()
+```
+
+### More summarize functions
+
++  `summarize_all()` Applies a function to all of the non-grouping variables! (Even "day", which isn't meaningful, but that's okay) 
++  `summarize_at()`  To choose which variables to summarize 
+
+```{r}
+
+```
+
+## Sort
+
+```{r}
+
+```
+
+### Your Turn 6  
+
+Use the `wq_trimmed` data frame. Calculate monthly average temp, sal, and do_pct (at least - more variables if you like) *for each station*. Make a scatterplot using any two of these variables. Use what you've learned about `ggplot2`'s options to adjust the look and feel of the graph. Is the relationship what you expected it to be? Does it vary by site?     
+
+```{r}
+
+```
+
+***
+***
+
+# Reshaping data with `tidyr`
+
+Run the chunk below to "reset" each of the tester data frames
+
+```{r}
+# load and clean up some data files we've already been working with
+ebird <- read.csv(here::here("data", "eBird_workshop.csv"), stringsAsFactors = FALSE)
+ebird <- dplyr::distinct(ebird)
+
+wq <- read.csv(here::here("data", "daily_wq.csv"), stringsAsFactors = FALSE)
+wq_trimmed <- wq %>%
+    select(station_code, month, day, temp, sal, do_pct, depth) %>%
+    filter(!is.na(depth)) %>%
+    mutate(depth_ft = depth * 3.28,
+           temp_f = (9/5) * temp + 32)
+```
+
+## Example data
+
+tables 1, 2, 3, 4a, 4b, and 5 are all built-in datasets in R. They are different ways of representing the same data and are subsets from World Health Organization Tuberculosis data between 1999-2000.
+
+```{r}
+table1
+
+table2
+
+```
+
+Generate "toy data" to follow along with the slides
+
+```{r}
+cases <- tribble(
+    ~Country, ~"2011", ~"2012", ~"2013",
+    "FR",    7000,    6900,    7000,
+    "DE",    5800,    6000,    6200,
+    "US",   15000,   14000,   13000
+)
+
+pollution <- tribble(
+    ~city, ~size, ~amount,
+    "New York", "large",      23,
+    "New York", "small",      14,
+    "London", "large",      22,
+    "London", "small",      16,
+    "Beijing", "large",     121,
+    "Beijing", "small",     121
+)
+```
+
+### Your Turn 7
+
+*not code*
+On a sheet of paper, draw how the cases data set would look if it had the same values grouped into three columns: country, year, n
+
+
+## Pivoting data from wide to long using `pivot_longer()`
+
+```{r}
+
+
+
+```
+
+### Your Turn 8
+
+Use `pivot_longer()` to reorganize `table4a` into three columns: country, year, and cases.
+
+```{r}
+table4a
+
+```
+
+
+## Pivoting data from long to wide using `pivot_wider()`
+
+
+```{r}
+
+
+```
+
+
+### Your Turn 9
+
+Use pivot_wider() to reorganize table2 into four columns: country, year, cases, and population.
+
+```{r}
+table2
+
+```
+
+
+
+
