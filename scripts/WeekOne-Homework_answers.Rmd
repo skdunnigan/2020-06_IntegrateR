@@ -1,0 +1,77 @@
+---
+title: "Homework"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(here)
+library(ggplot2)
+library(janitor)
+```
+
+Your homework is to play around with the pivoting functions from `tidyr` while also applying additional learned content from the Visualize and Wrangle sessions.
+
+# Load data 
+
+Run the following chunk to load in the data. For this "homework" assignment, you are going to be working with fish seining data collected around the Guana dam in the GTM Research Reserve between 2018-2019. This data has a lot of information in it, so the code below helps to clean it up a bit for the homework assignment.
+
+*Don't forget to view your data!*
+
+```{r}
+fish <- read.csv(here::here('data', 'guana_fish.csv'), stringsAsFactors = FALSE) %>% 
+  janitor::clean_names() %>% 
+  dplyr::select(date, site, diel, everything(), 
+                -unid, -x, -unid_1, -crew, -time, -tide,
+                -haul, -dam_status, -date_time_stamp) %>%
+  dplyr::mutate(date = lubridate::mdy(date)) %>% 
+  dplyr::mutate_if(is.integer, as.numeric)
+```
+
+# 01. Convert the data into long format using `pivot_longer()`
+
+Create a new data frame called "fish_long" using `pivot_longer()` into a data frame with the following columns:
+
++  date
++  site
++  diel
++  species
++  count
+
+
+```{r}
+fish_long <- fish %>% 
+  pivot_longer(cols = 4:70, names_to = "species", values_to = "count")
+```
+
+# 02. Filter to select species of interest
+
+Create a new data frame called "fish_long_sub" where you select only the following species:
+
++  Farfantepenaeus aztecus
++  Leiostomus xanthurus
++  Callinectes sapidus
++  Anchoa mitchilli
+
+*Be sure to check how the species are named in the data frame!*
+
+```{r}
+fish_long_sub <- fish_sub %>% 
+    filter(species %in% c("farfantepenaeus_aztecus", "leiostomus_xanthurus", 
+                        "callinectes_sapidus", "anchoa_mitchilli")) 
+```
+
+# 03. Create a bar graph of abundance
+
+
+```{r}
+ggplot(fish_long_sub) +
+  geom_bar(aes(x = date, y = count, color = site), 
+           stat = "identity",
+           position = "dodge") +
+  facet_wrap(~species, scales = "free")
+```
