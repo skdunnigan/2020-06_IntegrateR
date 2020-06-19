@@ -1,0 +1,139 @@
+---
+title: "Homework"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(here)
+library(ggplot2)
+library(janitor)
+```
+
+Your homework is to play around with the pivoting functions from `tidyr` while also applying additional learned content from the Visualize and Wrangle sessions.
+
+# Load data 
+
+Run the following chunk to load in the data. For this "homework" assignment, you are going to be working with fish seining data collected around the Guana dam in the GTM Research Reserve between 2018-2019. This data has a lot of information in it, so the code below helps to clean it up a bit for the homework assignment.
+
+*Don't forget to view your data!*
+
+```{r}
+fish <- read.csv(here::here('data', 'guana_fish.csv'), stringsAsFactors = FALSE) %>% 
+  janitor::clean_names() %>% 
+  dplyr::select(date, site, diel, everything(), 
+                -unid, -x, -unid_1, -crew, -time, -tide,
+                -dam_status, -date_time_stamp) %>%
+  dplyr::mutate(date = lubridate::mdy(date)) %>% 
+  dplyr::mutate_if(is.integer, as.numeric)
+```
+
+# 01. Convert the data into long format using `pivot_longer()`
+
+Create a new data frame called "fish_long" using `pivot_longer()` into a data frame with the following columns:
+
++  date
++  site
++  diel
++  species
++  count  
+
+
+Hint: Your first few rows should look something like this:  
+
+date        | site         | diel  | species            | count  
+------------|--------------|-------|--------------------|------
+2018-05-31  | Guana River  | Day   | alosa_sp           | 0
+2018-05-31  | Guana River  | Day   | anchoa_hepsetus    | 0
+2018-05-31  | Guana River  | Day   | anchoa_mitchilli   | 48
+
+
+```{r}
+fish_long <- fish %>% 
+  pivot_longer(cols = 4:70, names_to = "species", values_to = "count")
+
+head(fish_long)
+```
+
+# 02. Filter to select species of interest
+
+Create a new data frame called `fish_long_sub` where you select only the following species:
+
++  Farfantepenaeus aztecus
++  Leiostomus xanthurus
++  Callinectes sapidus
++  Anchoa mitchilli  
+
+*Be sure to check how the species are named in the data frame!*  
+
+Use the `dim()` command on both data frames and compare the sizes before and after your filtering.  
+
+```{r}
+fish_long_sub <- fish_long %>% 
+    filter(species %in% c("farfantepenaeus_aztecus", "leiostomus_xanthurus", 
+                        "callinectes_sapidus", "anchoa_mitchilli")) 
+
+dim(fish_long)
+dim(fish_long_sub)
+```
+
+# 03. Graph of abundance by site per day
+
+*Before* you can create a graph of abundance, you must first average the seine hauls together. It appears that for each sampling day, there are multiple hauls of the net collected in each site during each period of the day (day vs. night). 
+
+To average these hauls together, you will want to use `group_by()`, and `summarise()` functions to create a new data frame. But, you do not necessarily need to assign it to a new object. You can work through a series of pipes ` %>% ` into your ggplot and your challenge is to do so!
+
+Create a line graph or density plot of the average abundance data for each fish species over time within each habitat. All species should be on the same figure (hint: subplots!). 
+
+*Note: If you choose to do a density plot, be sure to view the aesthetics for that geom! And remember, `alpha` controls transparency.*
+
+
+```{r}
+fish_long_sub %>% 
+  group_by(site, date, species) %>%
+  summarise(mean = mean(count, na.rm = TRUE)) %>%
+  ggplot() +
+  geom_density(aes(x = date, y = mean, color = site, fill = site), alpha = 0.3, stat = "identity") +
+  facet_wrap(~species, scales = "free") +
+  theme_bw()
+```
+
+
+# 04. Calculate summaries of fish caught.  
+
+##  4a. Using the subsetted data frame, calculate the total number caught of each species in this data set.  
+
+```{r}
+fish_long_sub %>% 
+  group_by(species) %>% 
+  summarize(total_caught = sum(count))
+```
+
+
+##  4b. Using the subsetted data frame, calculate the total number caught of each species in this data set, *by site*.  
+
+Save this as a data frame called `fish_totals` and print it.  
+
+```{r}
+fish_totals <- fish_long_sub %>% 
+  group_by(site, species) %>% 
+  summarize(total_caught = sum(count))
+
+fish_totals
+```
+
+
+# 05. Using the `fish_totals` data frame and `pivot_wider()`, turn this into an easier-to-read table.  
+
+Turn each site into a column; each species into a row; and fill the cells with the total_caught.  
+
+```{r}
+fish_totals %>% 
+  pivot_wider(names_from = "site",
+              values_from = "total_caught")
+```
+
