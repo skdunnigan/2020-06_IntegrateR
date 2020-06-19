@@ -19,6 +19,7 @@ Data visualization is the first step in data exploration and is also a great pla
 "r setup" is an optional label for a chunk, but it should always run once before anything else. Notice that in this setup we are loading the `tidyverse` and `here` packages. 
 
 ```{r setup, message = FALSE, warning = FALSE}
+htmltools::tagList(rmarkdown::html_dependency_font_awesome()) # specific for html output
 library(tidyverse)
 library(here)
 ```
@@ -479,3 +480,11 @@ Save the last plot and then locate it in the files pane.
 ```{r, eval = FALSE}
 ggsave("my-last-plot.png", dpi = 130)
 ```
+
+# Additional `ggplot2` Resources
+
+Thomas Lin Pederson ([<i class="fa fa-twitter"></i>thomasp85](https://twitter.com/thomasp85)) is a software engineer at RStudio and co-author of the `ggplot2` package (among other things). He recently gave an impromtu workshop for beginner/intermediate R users on [<i class="fa fa-youtube-play"></i>YouTube](https://www.youtube.com/channel/UCT9SgxpakGSH-yfRj_QhzIQ) and we encourage you to check it out to further dive into the `ggplot2` universe!
+
++  **[Part One (~2.5 hours)](https://www.youtube.com/watch?v=h29g21z0a68)** is focused on the grammar of graphics and theory behind `ggplot2`
++  **[Part Two (~2 hours)](https://www.youtube.com/watch?v=0m4yywqNPVY)** discusses extension packages to the `ggplot2` universe (`gganimate` and `patchwork` for example)
++  His materials are also available on [<i class="fa fa-github"></i>  GitHub](https://github.com/thomasp85/ggplot2_workshop )
