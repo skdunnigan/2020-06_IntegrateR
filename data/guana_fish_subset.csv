@@ -1,0 +1,72 @@
+UNID,Anchoa hepsetus,Anchoa mitchilli,Brevoortia tyrannus,Brevoortia sp.,Chaetodipterus faber,Ctenogobius boleosoma,Ctenogobius pseudofasciatus,Ctenogobius sp.,Cynoscion nebulosus,Cynoscion sp.,Cynoscion sp.*,Cyprinodon variegatus ,Callinectes sapidus,Callinectes similus,Callinectes sp.,Farfantepenaeus aztecus,Litopenaeus setiferus,Palaemonetes sp.,Lolliguncula brevis,UNID,Crew,Site,Date,Time,Diel,Tide,Haul,Dam status,DateTimeStamp
+1,0,48,47,0,0,0,0,0,0,0,0,0,7,0,0,15,0,0,0,1,"Tomazinis, Mathews, Shaw",Guana River,5/31/2018,10:30,Day,High Incoming,1,Closed,5/31/2018 10:30
+2,0,8,0,0,0,1,0,0,0,0,0,0,13,0,0,0,0,0,0,2,"Tomazinis, Mathews, Shaw",Guana Lake,5/31/2018,11:55,Day,N/A,1,Closed,5/31/2018 11:55
+3,0,15,51,0,0,0,0,0,0,0,0,0,2,0,1,92,0,0,0,3,"Tomazinis, Harding, Cecil",Guana River,5/31/2018,22:05,Night,High Incoming,1,Closed,5/31/2018 22:05
+4,0,1,0,0,0,0,0,0,0,0,0,0,3,0,0,20,0,0,0,4,Tomazinis,Guana Lake,5/31/2018,23:00,Night,N/A,1,Closed,5/31/2018 23:00
+5,3,1,0,80,0,0,0,0,0,0,0,0,4,0,0,11,0,1,0,5,"Dunnigan, Smith, Mathews, Shaw, Jlee, Greg",Guana River,6/14/2018,8:40,Day,High Incoming,1,Closed,6/14/2018 8:40
+6,0,73,0,0,0,0,0,0,0,0,0,1,4,0,0,0,0,0,0,6,"Dunnigan, Smith, Mathews, Shaw, Jlee, Greg",Guana Lake,6/14/2018,9:40,Day,NA,1,Closed,6/14/2018 9:40
+7,0,113,6,0,0,0,0,0,0,0,0,0,5,0,4,5,0,137,0,7,"Tomazinis, Canas, Mowbray",Guana River,6/14/2018,22:31,Night,High Incoming,1,Closed,6/14/2018 22:31
+8,0,15,0,0,0,0,0,0,0,0,0,38,2,0,0,7,0,8,0,8,"Tomazinis, Canas, Mowbray",Guana River,6/14/2018,23:15,Night,NA,1,Closed,6/14/2018 23:15
+9,0,12,0,36,0,0,0,0,0,0,0,1,12,0,1,3,0,0,0,9,"Tomazinis, Kurtz, Jlee, Shaw",Guana River,6/28/2018,8:40,Day,High Incoming,1,Closed,6/28/2018 8:40
+10,0,0,0,0,0,0,0,0,0,0,0,9,3,0,0,1,0,0,0,10,"Tomazinis, Kurtz, Jlee, Shaw",Guana Lake,6/28/2018,9:37,Day,NA,1,Closed,6/28/2018 9:37
+11,0,69,0,1,0,0,0,0,0,0,0,0,0,1,4,45,0,6,0,11,"Tomazinis, Tomazinis, Snavely, Shaw, McGinley, Canas",Guana River,6/28/2018,9:13,Night,High Incoming,1,Closed,6/28/2018 9:13
+12,0,5,0,0,0,0,0,0,0,0,0,7,1,0,0,15,0,1,0,12,"Tomazinis, Tomazinis, Snavely, Shaw, McGinley, Canas",Guana Lake,6/29/2018,9:42,Night,NA,1,Closed,6/29/2018 9:42
+13,0,1,0,0,0,0,0,0,0,0,0,0,5,0,1,0,0,0,0,13,"Tomazinis, Shaw, Granger, Lee, Blythe, Windham, Ellis",Guana River,7/12/2018,11:40,Day,High Outgoing,1,Open,7/12/2018 11:40
+14,0,10,0,0,0,0,0,6,0,0,0,10,7,0,3,1,0,0,0,14,"Tomazinis, Shaw, Granger, Lee, Blythe, Windham, Ellis",Guana Lake,7/12/2018,12:13,Day,NA,1,Open,7/12/2018 12:13
+15,0,16,0,0,0,0,0,0,0,0,0,4,16,0,0,37,0,0,0,15,"Tomazinis, Tomazinis, Canas, Alex, Tom, Jeff, Shaw",Guana River,7/12/2018,23:40,Night,High Outgoing,1,Open,7/12/2018 23:40
+16,0,7,0,0,0,1,0,0,0,0,0,69,6,0,1,3,0,0,0,16,"Tomazinis, Tomazinis, Canas, Alex, Tom, Jeff, Shaw",Guana Lake,7/12/2018,0:00,Night,NA,1,Open,7/12/2018 0:00
+17,0,0,0,0,0,0,0,0,0,0,0,0,6,0,31,8,0,0,0,17,"Tomazinis, Dunnigan, Shaw",Guana River,7/26/2018,12:00,Day,Mid outgoing,1,Open,7/26/2018 12:00
+18,0,0,0,0,0,0,0,0,0,1,0,6,2,0,29,16,0,0,0,18,"Tomazinis, Dunnigan, Shaw",Guana Lake,7/26/2018,14:49,Day,NA,1,Open,7/26/2018 14:49
+19,0,7,0,2,1,0,0,0,0,0,0,7,4,0,7,10,164,0,0,19,"Tomazinis, Tomazinis, Shaw, Finnan, Canas, Lee",Guana River,7/26/2018,23:46,Night,High Outgoing,1,Open,7/26/2018 23:46
+20,0,19,0,0,0,0,0,0,0,0,0,38,12,0,103,44,6,0,0,20,"Tomazinis, Tomazinis, Shaw, Finnan, Canas, Lee",Guana Lake,7/27/2018,0:10,Night,NA,1,Open,7/27/2018 0:10
+21,3,0,0,0,0,0,0,0,0,0,0,0,3,0,4,0,5,0,0,21,"Tomazinis, Mowbray, Lee, Korsman, Theodore",Guana River,8/9/2018,10:19,Day,Mid outgoing,1,Open,8/9/2018 10:19
+22,0,0,0,0,0,0,0,0,0,0,0,0,8,0,5,3,0,0,0,22,"Tomazinis, Mowbray, Lee, Korsman, Theodore",Guana Lake,8/9/2018,10:50,Day,NA,1,Open,8/9/2018 10:50
+23,0,0,0,0,0,0,0,0,0,0,0,1,3,0,0,1,137,0,0,23,"Tomazinis, Canas, Mckenzie, Finnan, Kurtz",Guana River,8/9/2018,23:00,Night,High outgoing,1,Open,8/9/2018 23:00
+24,0,24,0,2,0,1,0,0,1,0,0,78,29,0,2,14,6,0,0,24,"Tomazinis, Canas, Mckenzie, Finnan, Kurtz",Guana Lake,8/9/2018,23:35,Night,NA,1,Open,8/9/2018 23:35
+25,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,1,6,0,0,25,"Tomazinis, Heeg, Snavely, Windham, Kuhn, Rininger, Tomazinis",Guana River,8/23/2018,10:30,Day,High outgoing,1,Closed,8/23/2018 10:30
+26,0,0,0,0,0,0,0,0,1,0,0,18,17,3,1,1,1,0,0,26,"Tomazinis, Heeg, Snavely, Kuhn, Rininger, Tomazinis",Guana Lake,8/23/2018,11:10,Day,NA,1,Closed,8/23/2018 11:10
+27,0,1,1,0,0,0,0,0,2,0,0,1,1,0,6,1,69,0,0,27,"Tomazinis, Harding, Mathews, Shaw, Sturchio",Guana River,8/23/2018,22:40,Night,High Outgoing,1,Closed,8/23/2018 22:40
+28,0,32,0,0,0,0,0,0,0,0,1,10,4,0,5,7,5,0,0,28,"Tomazinis, Harding, Mathews, Shaw, Sturchio",Guana Lake,8/23/2018,23:11,Night,NA,1,Closed,8/23/2018 23:11
+29,0,1,0,0,0,0,0,0,0,0,0,0,4,0,0,1,1,0,0,29,"Tomazinis, Dunnigan, Kuhn",Guana River,9/7/2018,9:30,Day,High Outgoing,1,Closed,9/7/2018 9:30
+30,0,2,0,0,0,0,0,0,0,0,0,0,6,0,0,1,0,0,0,30,"Tomazinis, Dunnigan, Kuhn",Guana Lake,9/7/2018,10:15,Day,NA,1,Closed,9/7/2018 10:15
+31,0,30,0,0,0,0,0,0,3,0,0,0,2,0,0,6,154,0,0,31,"Tomazinis, Tomazinis, Lee, Canas, Harding",Guana River,9/7/2018,22:20,Night,High,1,Closed,9/7/2018 22:20
+32,0,190,0,0,0,0,0,1,0,0,0,1,5,0,0,3,8,0,0,32,"Tomazinis, Tomazinis, Lee, Canas, Harding",Guana Lake,9/7/2018,22:42,Night,NA,1,Closed,9/7/2018 22:42
+33,0,0,0,0,0,0,0,0,3,0,0,1,1,0,0,16,0,0,0,33,"Tomazinis, Kurtz, Kuhn, Darragh",Guana River,9/21/2018,8:45,Day,High Outgoing,1,Closed,9/21/2018 8:45
+34,0,6,0,0,0,0,0,6,0,0,0,0,3,0,0,0,0,0,0,34,"Tomazinis, Kurtz, Kuhn, Darragh",Guana Lake,9/21/2018,9:25,Day,NA,1,Closed,9/21/2018 9:25
+35,3,172,0,0,0,0,0,0,1,0,0,0,2,0,0,30,24,0,0,35,"Tomazinis, Tomazinis, Gabby, Pondicherry",Guana River,9/21/2018,21:17,Night,High,1,Closed,9/21/2018 21:17
+36,0,236,0,0,0,0,1,1,0,0,0,4,9,0,0,4,0,147,0,36,"Tomazinis, Tomazinis, Gabby, Pondicherry",Guana Lake,9/21/2018,21:45,Night,NA,1,Closed,9/21/2018 21:45
+37,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,24,0,0,0,37,"Tomazinis, Calleson, Darragh, McClure",Guana River,10/5/2018,8:13,Day,High Outgoing,1,Closed,10/5/2018 8:13
+38,0,53,0,0,0,0,4,0,0,0,0,0,6,0,0,6,1,0,0,38,"Tomazinis, Calleson, Darragh, McClure",Guana Lake,10/5/2018,8:57,Day,NA,1,Closed,10/5/2018 8:57
+39,1,105,0,0,0,0,0,0,0,3,0,1,0,0,0,27,21,0,1,39,"Tomazinis, Tomazinis, Finnan, Kurtz",Guana River,10/5/2018,20:10,Night,High,1,Closed,10/5/2018 20:10
+40,0,1407,0,0,0,41,4,0,0,0,0,1,2,0,0,2,1,0,0,40,"Tomazinis, Tomazinis, Finnan, Kurtz",Guana Lake,10/5/2018,20:37,Night,NA,1,Closed,10/5/2018 20:37
+41,0,5,0,0,0,1,0,0,0,0,0,0,10,0,0,14,7,0,0,41,"Tomazinis, Knoell, Kurtz",Guana River,10/19/2018,8:20,Day,Mid outgoing,1,Closed,10/19/2018 8:20
+42,0,2,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,42,"Tomazinis, Knoell, Kurtz",Guana Lake,10/19/2018,9:30,Day,NA,1,Closed,10/19/2018 9:30
+43,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,26,23,0,0,43,"Tomazinis, Tomazinis, Brownfield, Brownfield, Canas",Guana River,10/19/2018,20:30,Night,Mid outgoing,1,Closed,10/19/2018 20:30
+44,0,125,0,0,0,11,0,0,0,0,0,0,2,0,0,0,0,78,0,44,"Tomazinis, Tomazinis, Brownfield, Brownfield, Canas",Guana Lake,10/19/2018,20:54,Night,NA,1,Closed,10/19/2018 20:54
+45,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,45,"Tomazinis, Calleson, Finnan, Gibson",Guana River,11/2/2018,16:00,Day,High Incoming,1,Open*,11/2/2018 16:00
+46,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,46,"Tomazinis, Calleson, Finnan, Gibson",Guana Lake,11/2/2018,16:20,Day,NA,1,Open*,11/2/2018 16:20
+47,0,0,0,0,0,3,0,0,0,0,0,0,5,0,0,15,5,0,0,47,"Tomazinis, Kurtz, Novak",Guana River,11/16/2018,13:50,Day,High Incoming,1,Open*,11/16/2018 13:50
+48,0,4,0,0,0,1,1,0,0,0,0,0,4,0,0,0,0,0,0,48,"Tomazinis, Kurtz, Novak",Guana Lake,11/16/2018,14:45,Day,NA,1,Open*,11/16/2018 14:45
+49,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,5,0,0,49,"Tomazinis, Kurtz, Gwin, MacDonald, MacDonald",Guana River,11/30/2018,14:15,Day,High,1,Open*,11/30/2018 14:15
+50,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,4,0,0,50,"Tomazinis, Kurtz, Gwin, MacDonald, MacDonald",Guana River,11/30/2018,14:55,Day,High,2,Open*,11/30/2018 14:55
+51,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,51,"Tomazinis, Kurtz, Gwin, MacDonald, MacDonald",Guana Lake,11/30/2018,15:15,Day,NA,1,Open*,11/30/2018 15:15
+52,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,2,0,52,"Tomazinis, Kurtz, Gwin, MacDonald, MacDonald",Guana Lake,11/30/2018,15:25,Day,NA,2,Open*,11/30/2018 15:25
+53,0,0,0,0,0,3,0,0,0,0,0,0,1,0,0,0,0,2,0,53,"Tomazinis, Kurtz, Gwin, MacDonald, MacDonald",Guana Lake,11/30/2018,15:35,Day,NA,3,Open*,11/30/2018 15:35
+54,0,0,0,0,0,0,0,0,0,0,0,0,4,0,3,0,2,0,0,54,"Tomazinis, Kurtz, Neighbor",Guana River,12/14/2018,12:25,Day,High Incoming,1,Open*,12/14/2018 12:25
+55,0,0,0,0,0,0,0,0,0,0,0,0,5,0,1,0,16,0,0,55,"Tomazinis, Kurtz, Neighbor",Guana River,12/14/2018,12:35,Day,High Incoming,2,Open*,12/14/2018 12:35
+56,0,7,0,0,0,0,0,0,0,0,0,1,5,0,0,0,5,0,0,56,"Tomazinis, Kurtz, Neighbor",Guana River,12/14/2018,12:45,Day,High Incoming,3,Open*,12/14/2018 12:45
+57,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,57,"Tomazinis, Kurtz, Neighbor",Guana Lake,12/14/2018,13:05,Day,NA,1,Open*,12/14/2018 13:05
+58,0,0,0,0,0,7,0,0,0,0,0,0,1,0,0,0,0,0,0,58,"Tomazinis, Kurtz, Neighbor",Guana Lake,12/14/2018,13:10,Day,NA,2,Open*,12/14/2018 13:10
+59,0,0,0,0,0,9,0,0,0,0,0,0,0,0,3,0,0,0,0,59,"Tomazinis, Kurtz, Neighbor",Guana Lake,12/14/2018,13:15,Day,NA,3,Open*,12/14/2018 13:15
+60,0,1,0,0,0,0,0,0,0,0,0,0,2,0,5,0,0,0,0,60,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana River,12/28/2018,12:45,Day,High Incoming,1,Open*,12/28/2018 12:45
+61,0,16,0,0,0,0,0,0,0,0,0,0,2,0,0,0,3,0,0,61,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana River,12/28/2018,13:06,Day,High Incoming,2,Open*,12/28/2018 13:06
+62,0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,62,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana River,12/28/2018,13:23,Day,High Incoming,3,Open*,12/28/2018 13:23
+63,0,0,0,0,0,5,0,0,1,0,0,0,1,0,0,0,0,0,0,63,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana Lake,12/28/2018,15:00,Day,NA,1,Open*,12/28/2018 15:00
+64,0,0,0,0,0,5,0,0,0,0,0,13,2,0,2,0,0,0,0,64,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana Lake,12/28/2018,15:10,Day,NA,2,Open*,12/28/2018 15:10
+65,0,1,0,0,0,27,0,0,0,0,0,0,1,0,1,0,0,0,0,65,"Tomazinis, Roehr, Gibson, Neighbor, Fox",Guana Lake,12/28/2018,15:28,Day,NA,3,Open*,12/28/2018 15:28
+66,0,1,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,66,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana River,1/11/2019,11:16,Day,High Incoming,1,Open*,1/11/2019 11:16
+67,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,1,0,0,67,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana River,1/11/2019,11:24,Day,High Incoming,2,Open*,1/11/2019 11:24
+68,0,10,0,0,0,0,0,0,0,0,0,0,5,0,7,0,1,0,0,68,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana River,1/11/2019,11:40,Day,High Incoming,3,Open*,1/11/2019 11:40
+69,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,69,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana Lake,1/11/2019,12:49,Day,NA,1,Open*,1/11/2019 12:49
+70,1,0,0,0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,70,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana Lake,1/11/2019,12:58,Day,NA,2,Open*,1/11/2019 12:58
+71,1,0,0,0,0,0,0,0,0,0,0,4,1,0,1,0,0,37,0,71,"Tomazinis, Gibson, Sokol, Downing, Allen",Guana Lake,1/11/2019,13:05,Day,NA,3,Open*,1/11/2019 13:05
