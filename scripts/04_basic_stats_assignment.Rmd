@@ -1,0 +1,449 @@
+---
+title: "Exploring Basic Statistical Output"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+library(broom)
+```
+
+
+# Read in data  
+
+In this section, we will work with water quality data again. First we will filter it to a smaller subset.  
+
+```{r}
+wq <- read.csv(here::here("data", "monthly_wq.csv"))
+wq_sub <- wq %>% 
+    filter(state %in% c("Alaska", "Florida"))
+```
+
+
+# Background / Approach  
+
+Many of us want to use R for our statistical analyses, for many reasons: it's cheaper than SPSS; it can do a lot of stuff; it's re-runnable. It's great for this because it was originally written by statisticians, for statisticians.  
+
+Some things about this language really irritate people who know a lot about other
+computer languages, because R can be "quirky". These quirks are due to its original intended uses.  
+
+There are almost unlimited things you can do with R! We are not going to cover them all; really it's only a very small subset. What we are going to do is go through some basic, "Stat 101" types of tests, to see how statistics generally work in R.  
+
+
+## Some packages useful for ecological/environmental stats  
+
+These packages are very popular, for good reason:  
+
++  `vegan`, for community and other ecological analyses (NMDS, Bray-Curtis Similarity, Diversity Indices, etc.)  
++  `EnvStats`, especially good for water quality statistics; this package has extremely good documentation  
+
+You can also check out CRAN's "Task Views", which are curated collections of packages that can be useful in certain domains.  https://cran.r-project.org/web/views/
+
+
+# Comparing two groups: t-test  
+
+**Is temperature different in Alaska vs. Florida?**
+
+To compare the means of two groups, we can use a t-test. This is a simple command in R, but first we need to narrow down our groups.  
+
+## Graph it  
+
+Do you expect to find a significant difference?  
+
+```{r}
+ggplot(wq_sub) +
+    geom_boxplot(aes(x = state, y = temp, fill = state)) +
+    theme(legend.position = "none") +
+    labs(title = "Is Temperature different in Alaska vs. Florida?")
+```
+
+
+## Test it  
+
+**t-tests**  
+
+The function to use is `t.test()`. This is in the `stats` package, part of base R.  
+
+# Your Turn 1  
+
+Look at the help file for `t.test()`  (how do you pull up a help file again?).  
+
+1)  What do we need to provide to this function in order to compare two groups?  
+
+2)  What if we only wanted to compare one group to a known quantity (e.g. "Is mean temperature in Alaska different from 10 degrees C?")    
+
+```{r, eval = FALSE}
+
+```
+ 
+
+
+For our purposes, we're okay with all the defaults. We want to test whether mean water temperature is different between Alaska and Florida. This means we need to identify our two vectors of values to compare. There are multiple ways to do this. All of them involve, somehow, identifying a subset of our wq data. For now, we'll use the `dplyr` functions from last week.  
+
+
+
+# Your Turn 2  
+
+Fill in the blanks and run the code to subset your data frame. Then perform the t-test and paste your p-value in the chat box.  
+
+```{r}
+temp_fl <- -- %>% 
+    ------(state == "Florida") %>% 
+    ------(temp)
+
+temp_ak <- -- %>% 
+    ------(state == "Alaska") %>% 
+    ------(temp)
+
+
+
+```
+
+
+Now, if you want to report these values in some way other than it was presented, you need to save the output as an object. For now, re-run your test, but saving it to an object named `t_out`. What kind of object is `t_out`? (Hint: look in your environment pane.)  
+
+```{r}
+
+```
+
+
+You can pull out components like you would explore many other lists, using `$` notation (and autofill in RStudio!). Here is an example of pulling out the test statistic:  
+
+```{r}
+
+```
+
+
+How would we pull out the p-value?  
+
+```{r}
+
+```
+
+
+How about the 95% confidence interval? (Note - statisticians really appreciate seeing the test statistic, degrees of freedom (if applicable), and confidence intervals in addition to a p-value.)  
+
+```{r}
+
+```
+
+
+# Comparing more than 2 groups: ANOVA  
+
+Is temperature different between states? (Does at least one state have a mean temperature that is different from at least one other state?)  
+
+
+# Your Turn 2: Graph it  
+
+Fill in the blanks to create a graph similar to the one above, but with all states represented.
+
+```{r}
+ggplot(--) +
+    geom_boxplot(aes(x = -----, y = ----, fill = state)) +
+    theme(legend.position = "none") +
+    labs(----- = "Is Temperature different between states?")
+```
+
+
+## Test it  
+
+There are different commands that can be used to run an ANOVA in R. We will start with the more straightforward one: `aov()`. However, this has some limitations so we will eventually cover `lm()` followed by `anova()`.   
+
+First let's take a look at the help file:  
+
+```{r, eval = FALSE}
+?aov
+```
+
+
+R takes formulas as **y ~ x**  (think "y described by x").  
+
+We also need to specify the data frame.  
+
+
+# Your Turn 3  
+
+Run an ANOVA for temperature described by state, on the wq data frame.  
+
+1) Run it without saving it to an object. Does the output resemble that of the t-test?  
+
+2) Now save it to an object, named `aov_out`. Then run the command `summary(aov_out)`. Does this give you output that you expect?  
+
+3) Can you pull out the confidence interval and p-value the same way we did for the t-test?  
+
+```{r}
+
+
+
+
+
+
+```
+
+
+
+# ANOVA method 2: lm() first  
+
+ANOVAs are a type of linear model. If you've had a lot of stats courses, and run lots of regression analyses, you may have generated ANOVA tables from these models. It's very similar to `aov()` above and in simple cases they can be used interchangeably. 
+
+```{r}
+lm_out <- lm(temp ~ state, data = wq)
+anova(lm_out)
+```
+
+
+
+# Your Turn 4  
+
+Now see if you can save that `anova` output to an object and pull out the test statistic and p-value.  
+
+```{r}
+
+
+
+```
+
+
+
+
+
+
+# THERE'S A BETTER WAY  
+
+And now you'll appreciate it: the `broom` package!  
+
+The first main function of this package is `tidy()`, which compiles the model output into a tibble/data frame.  
+
+
+```{r}
+broom::tidy(aov_out)
+broom::tidy(lm_aov)
+```
+
+It can even be used on the t-test output!  
+
+```{r}
+tidy(t_out)
+```
+
+Note that it is *not* telling you what type of test statistic you are using (t vs. F in our case, but there are others), so pay attention.  
+
+You can find additional diagnostics with the `glance()` function:  
+
+```{r}
+broom::glance(aov_out)
+glance(t_out)
+```
+
+
+
+# Your Turn 5  
+
+1) Make a box plot of pH by state.  
+
+2) Run an ANOVA to test whether pH is different between states. Does the ANOVA output match your expectations? 
+
+3) Examine your ANOVA output using the two `broom` functions.  
+
+Do you have a preference for `aov` vs. `lm`? Discuss in the chat box!  
+
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+# Linear Regression  
+
+
+We've already used this command. For a regression, we are interested in different pieces of the output.  
+
+Let's take a look at DO as described by temperature.  
+
+**Are DO and temperature linearly related to each other?**  
+
+```{r}
+ggplot(wq) +
+    geom_point(aes(x = temp, y = do_mgl, color = state), size = 3) +
+    labs(title = "Is Dissolved Oxygen related to Temperature?")
+```
+
+
+```{r}
+lm_out <- lm(do_mgl ~ temp, data = wq)
+summary(lm_out)
+tidy(lm_out)
+glance(lm_out)
+```
+
+
+You can pull the slope and intercept out of the data frames above. In simple cases, you can also add a line to a plot using `geom_smooth()`:  
+
+```{r}
+ggplot(wq, aes(x = temp, y = do_mgl)) +
+  geom_point(aes(color = state), size = 3) +
+  labs(title = "Is Dissolved Oxygen related to Temperature?") +
+  geom_smooth(method = "lm")
+```
+
+I had to put `color = state` inside the `geom_point()` call rather than the global call, because if we group things globally, we'll get a different smoothing layer for every state. Sometimes you want that, but sometimes you don't!  
+
+```{r}
+ggplot(wq, aes(x = temp, y = do_mgl, color = state)) +
+  geom_point(size = 3) +
+  labs(title = "Is Dissolved Oxygen related to Temperature?") +
+  geom_smooth(method = "lm")
+```
+
+That is NOT what we want to show! Testing would be a different model that we won't go into.  
+
+
+However, if you have reason to believe that DO is related to both temperature and salinity, you can include both in the model. This is multiple regression (and you can use a lot of variables; not that you necessarily should).  
+
+```{r}
+lm_mult <- lm(do_mgl ~ temp + sal, data = wq)
+summary(lm_mult)
+```
+
+
+
+# Your turn 6  
+
+1) Make a plot of pH (y-axis) by salinity (x-axis). Add a regression line to it with `geom_smooth()`. Is this a good linear relationship?  
+
+2) Now perform a linear regression; save it to an object called `sal_ph`. What are the values for slope and R^2? Do you still think this is a good linear relationship?
+
+
+```{r}
+
+
+
+
+
+
+
+```
+
+
+
+
+***  
+***  
+***  
+
+# Bonus Content  
+
+## Kruskal-Wallis test  
+
+```{r}
+#### kruskal-wallis ----
+
+## non-parametric version of ANOVA (that is a gross oversimplification):
+# this is also in base R; it also takes a formula; and it also returns a list
+kruskal.test(temp ~ state, data = wq)
+kw_out <- kruskal.test(temp ~ state, data = wq)
+
+kw_out
+kw_out$p.value
+
+# summary is not so nice here
+summary(kw_out)
+# you learn by trying things, truly
+
+broom::tidy(kw_out)
+```
+
+## Correlation  
+
+```{r}
+# correlation
+
+
+# we might ask if two variables are correlated: is there a linear relationship, and which direction does it go?
+# cor() is the base R version of correlation
+cor(wq$temp, wq$do_mgl)
+
+# correlation coefficient goes from -1 to 1
+# -1 is a very strong negative association
+# 0 is no association (a flat line)
+# 1 is a strong positive association
+
+
+# your boss asks, is that statistically significant?
+# you can use cor.test for this
+cor.test(wq$temp, wq$do_mgl)
+
+
+cor_out <- cor.test(wq$temp, wq$do_mgl)
+typeof(cor_out)
+attributes(cor_out)
+# seeing some similarities to our other outputs?  
+```
+
+## Residuals (in context of linear regression)  
+
+```{r}
+# something important about linear regression is
+# RESIDUALS ----
+# we are back to the do_mgl by temp linear model output
+residuals(lm_out)
+lm_out$residuals
+
+
+# this is the vertical distance between each point
+# and the line we drew
+# linear regression minimizes the sum of each of these distances squared
+
+
+# we want residuals to be normally distributed
+# can check with a histogram:
+hist(lm_out$residuals, breaks = 20)
+
+# or a normal qq-plot - we want to see the points fall pretty much on a line:
+ggplot() +
+    geom_qq(aes(sample = lm_out$residuals))
+
+ggplot() +
+    geom_qq(aes(sample = lm_out$residuals)) +
+    geom_qq_line(aes(sample = lm_out$residuals))
+
+
+# R also has a shapiro-wilk normality test built in (and probably others)
+shapiro.test(lm_out$residuals)
+
+shap_out <- shapiro.test(lm_out$residuals)
+typeof(shap_out)
+attributes(shap_out)
+
+
+
+# Also, when we plot residuals, we don't want to see a pattern
+# we want to see them bouncing randomly around 0
+# because that means we've missed something important in our model
+# typically we look at residuals vs. fitted values (values along the line)
+plot(lm_out$residuals ~ lm_out$fitted.values)
+abline(h = 0)
+
+# we frequently look at residuals in order if the order of the data may be important
+# especially if time is the x-axis; autocorrelation is a thing you should google
+# here the order is not meaningful but this is how you'd do it:
+plot(lm_out$residuals)
+abline(h = 0)
+```
+
