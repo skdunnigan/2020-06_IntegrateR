@@ -1,0 +1,252 @@
+---
+title: "Functions"
+author: "Cressman and Dunningan | Integrate R | June 2020"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+    df_print: tibble
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Setup:
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(here)
+library(ggplot2)
+
+ebird <- read.csv(here::here("data", "eBird_workshop.csv"), stringsAsFactors = FALSE)
+ebird <- dplyr::distinct(ebird)
+
+wq <- read.csv(here::here("data", "daily_wq.csv"), stringsAsFactors = FALSE)
+wq_trimmed <- wq %>%
+    select(station_code, month, day, temp, sal, do_pct, depth) %>%
+    filter(!is.na(depth)) %>%
+    mutate(depth_ft = depth * 3.28,
+           temp_f = (9/5) * temp + 32)
+```
+
+
+# Functions  
+
+**DRY** - **D**on't **R**epeat **Y**ourself.  
+
+If you've used the same chunk of code more than 3 times, you may want to consider writing a *function*. This can reduce errors due to typos (or just forgetting to change something in some spot), and also makes it easier to re-run a whole pile of code when you realize something needed to change - you only have to change it in one place!    
+
+
+## Function Example  
+
+R has functions to calculate mean and standard deviation of a dataset, but there isn't one for standard error. Remember, `standard error = sd / sqrt(n)`. 
+
+Let's get this working on a small chunk of data. I like to pull out a little bit and call it "test".   
+
+```{r}
+test <- wq_trimmed %>% 
+  filter(station_code == "gndblwq",
+         month == 1)    
+```
+
+Then I get the code working on my test data:
+
+```{r}
+sd(test$temp_f, na.rm = TRUE) / sqrt( sum(!is.na(test$temp_f)) )
+```
+
+
+See why that might be annoying to type over and over again? And how it could be prone to error?  
+
+
+The thing we're repeating, that we might want to generalize, is `test$temp_f`.  
+
+
+So let's assign that to something, and replace the specific value in our code with the variable `x`:  
+
+```{r}
+x <- test$temp_f
+sd(x, na.rm = TRUE) / sqrt( sum(!is.na(x)) )
+```
+
+
+We're most of the way to the function. We need to wrap it up like this, in `()` and `{}`, and come up with a name. RStudio can help with this formatting, if you go to the 'Code' toolbar and select 'Extract Function'.    
+
+```{r}
+sterr <- function(x){
+  sd(x, na.rm = TRUE) / sqrt( sum(!is.na(x)) )
+}
+```
+
+
+Run the above chunk of code. Now you can see `sterr` in your Environment pane as a function!  And you use it like any other function:  
+
+```{r}
+sterr(test$temp_f)
+sterr(test$sal)
+```
+
+
+Let's check it on our bigger data frame!  
+
+```{r}
+sterr(wq_trimmed$temp_f)
+```
+
+
+# Your Turn 1  
+
+## 1a  
+
+Now **you** write a function! Name it `divide_by_10`. The input should be a vector (like we did with `sterr`), and the output should be each value of that vector divided by 10.  
+
+Remember to get it working *before* you wrap it up into a function.  
+
+```{r}
+
+
+
+
+
+
+
+```
+
+
+## 1b   
+
+Now, what if we want to divide by something other than 10? Generalize the function to take two arguments as input. The second input (call it `y`) should be the denominator in your `divide_by` function.  
+
+
+```{r}
+
+
+
+
+
+
+
+```
+
+Reminder: It's always a good idea to make sure you get output you expect!  
+
+
+
+
+## Setting default values for arguments  
+
+The next thing we'll do is set a default argument for `y` - if nothing else is specified, our function will divide the input vector by 10. This is done in the argument definition:  
+
+```{r}
+divide_by <- function(x, y = 10){
+  x / y
+}
+```
+
+And we can test it the same way we've tested others.  
+
+```{r}
+divide_by(test$sal, 10)
+divide_by(test$sal)
+divide_by(test$sal, 100)
+```
+
+
+
+***  
+***  
+
+
+# Functions using the tidyverse  
+
+What we've done in this workshop has been very tidyverse-heavy. Functions using the tidyverse need to be handled a little differently. We will use graphing as an example.    
+
+First we'll make a simple plot. I'm not claiming that this is pretty.  
+
+```{r}
+ggplot(wq_trimmed) +
+  geom_point(aes(x = sal, 
+                 y = do_pct, 
+                 col = station_code))
+```
+
+
+Say we want to make this plot for a variety of pairs of parameters, with a third to provide color. So these are three arguments that we want to be able to specify. When we use RStudio's menu to extract a function, it gives us four - it includes the data frame as the first argument (it may not always be called `wq_trimmmed`) - and it looks like this:    
+
+```{r}
+my_plot <- function(wq_trimmed, sal, 
+                    do_pct, station_code) {
+  ggplot(wq_trimmed) +
+    geom_point(aes(x = sal, 
+                   y = do_pct, 
+                   col = station_code))
+}
+```
+
+
+So let's change some names and see what happens.  
+
+```{r}
+my_plot <- function(data, param1, 
+                    param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = param1, 
+                   y = param2, 
+                   col = param3))
+}
+```
+
+
+Try.....
+
+```{r, eval = FALSE}
+my_plot(wq_trimmed, sal, do_pct, station_code)
+```
+
+
+Uh-oh.  
+
+Fortunately, the solution is simple: wrap the arguments that will change inside two curly braces `{{ }}`.  
+
+```{r}
+my_plot <- function(data, param1, 
+                    param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = {{ param1 }}, 
+                   y = {{ param2 }}, 
+                   col = {{ param3 }})) 
+}
+```
+
+And play with it a bit.  
+
+```{r}
+my_plot(wq_trimmed, sal, do_pct, station_code)
+my_plot(wq_trimmed, sal, do_pct, month)  
+
+my_plot(wq_trimmed, sal, do_pct, factor(month))  
+# try it yourself!  
+```
+
+
+If in doubt, "embrace" it! `{{ }}`
+
+
+
+# Your Turn 2  
+
+Add theme elements to the plot in your `my_plot` function to make it a plot you actually *want* to reproduce. Then use your function on at least two combinations of parameters (we suggest `do_pct` vs `temp`, and `do_pct` vs `sal`).  
+
+```{r}
+
+
+
+
+
+```
+
+

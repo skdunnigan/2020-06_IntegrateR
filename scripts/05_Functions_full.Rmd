@@ -1,0 +1,296 @@
+---
+title: "Functions"
+author: "Cressman and Dunningan | Integrate R | June 2020"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+    df_print: tibble
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Setup:
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(here)
+library(ggplot2)
+
+ebird <- read.csv(here::here("data", "eBird_workshop.csv"), stringsAsFactors = FALSE)
+ebird <- dplyr::distinct(ebird)
+
+wq <- read.csv(here::here("data", "daily_wq.csv"), stringsAsFactors = FALSE)
+wq_trimmed <- wq %>%
+    select(station_code, month, day, temp, sal, do_pct, depth) %>%
+    filter(!is.na(depth)) %>%
+    mutate(depth_ft = depth * 3.28,
+           temp_f = (9/5) * temp + 32)
+```
+
+
+# Functions  
+
+There is a principle in programming known as **DRY** - **D**on't **R**epeat **Y**ourself.  
+
+I'm not here to shame you for copying-and-pasting, then making a little change to, code that works. We all do that.  
+
+However. If you've used the same chunk of code more than 3 times, you may want to consider writing a *function*. This can reduce errors due to typos (or just forgetting to change something in some spot), and also makes it easier to re-run a whole pile of code when you realize something needed to change - you only have to change it in one place!    
+
+## Outline of a function  
+
+You've got some **working code** that gives you an **output** you want. And you identify the **pieces that you want to change**. These bold parts are the three parts of a function:  
+
+1.  your working code is the **body**.  
+2.  the output is known as the **return value**. It can be a single value, or a data frame, or a list.... whatever you want it to be.  
+3.  the part(s) that you change are the **arguments** (also known as "formals").  
+    +  some advice from Hadley Wickham and Garrett Grolemund, in ["R for Data Science"](https://r4ds.had.co.nz/) (aka *R4DS*):  
+    +  put *data* arguments first  
+    +  *detail* arguments should go at the end, and should usually have default values
+
+You also need to be aware of the **environment** in which you call the function. Again from R4DS: "The environment of a function controls how R finds the value asociated with a name." What this means is, if you use some variable in your function but don't make it an argument, R is going to look "upstream" from your function and try to find something with that name. You can probably get by for a while without worrying about this at all, but it's good to be aware of in case you do have issues with a function.    
+
+
+## Function Example  
+
+R has functions to calculate mean and standard deviation of a dataset, but there isn't one for standard error. Remember, `standard error = sd / sqrt(n)`. 
+
+Let's get this working on a small chunk of data. I like to pull out a little bit and call it "test".   
+
+```{r}
+test <- wq_trimmed %>% 
+  filter(station_code == "gndblwq",
+         month == 1)    
+```
+
+
+
+***  
+***  
+
+
+
+```{r}
+# so combine those for standard error, and don't forget the `sqrt`:
+sd(test$temp_f, na.rm = TRUE) / sqrt( sum(!is.na(test$temp_f)) )
+```
+
+
+See why that might be annoying to type over and over again? And how it could be prone to error?  
+
+
+Okay, so what can we generalize here? What are we repeating?  
+
+
+`test$temp_f`, right?  
+
+
+So let's assign that to something, and replace the specific value in our code with the variable `x`:  
+
+```{r}
+x <- test$temp_f
+sd(x, na.rm = TRUE) / sqrt( sum(!is.na(x)) )
+```
+
+
+Now we could make another variable our `x` and find its standard error.  
+
+```{r}
+x <- test$sal
+sd(x, na.rm = TRUE) / sqrt( sum(!is.na(x)) )
+```
+
+
+
+We're still copying and pasting, but it's general. So we're most of the way to the function. We need to wrap it up like this, in `()` and `{}`, and come up with a name:  
+
+```{r}
+sterr <- function(x){
+  sd(x, na.rm = TRUE) / sqrt( sum(!is.na(x)) )
+}
+```
+
+
+
+
+Run the above chunk of code. Now you can see `sterr` in your Environment pane as a function!  And you use it like any other function:  
+
+```{r}
+sterr(test$temp_f)
+sterr(test$sal)
+```
+
+
+Let's check it on our bigger data frame!  
+
+```{r}
+sterr(wq_trimmed$temp_f)
+```
+
+# Your Turn 1a  
+
+
+Now **you** write a function! Name it `divide_by_10`. The input should be a vector (like we did with `sterr`), and the output should be each value of that vector divided by 10.  
+
+Remember to get it working *before* you wrap it up into a function.  
+
+```{r}
+test$sal / 10
+
+divide_by_10 <- function(x){
+  x/10
+}
+
+divide_by_10(test$sal)
+```
+
+
+# Your Turn 1b   
+
+
+Now. What if we want to divide by something other than 10? Generalize the function to take two arguments as input. The second input (call it `y`) should be the denominator in your `divide_by` function.  
+
+
+```{r}
+test$sal / 10
+
+divide_by <- function(x, y){
+  x / y
+}
+
+divide_by(test$sal, 10)
+divide_by(test$sal, 100)
+```
+
+Reminder: It's always a good idea to make sure you get output you expect!  
+
+
+
+
+## Setting default values for arguments  
+
+So, once you have a working function, you can continue to build on it and make it more flexible. 
+
+The next thing we'll do is set a default argument for `y` - if nothing else is specified, our function will divide the input vector by 10. This is done in the argument definition:  
+
+```{r}
+divide_by <- function(x, y = 10){
+  x / y
+}
+
+divide_by(test$sal, 10)
+divide_by(test$sal)
+divide_by(test$sal, 100)
+```
+
+
+
+***  
+***  
+
+
+# Functions using the tidyverse  
+
+What we've done in this workshop has been very tidyverse-heavy. The tidyverse reduces cognitive burden when it comes to interactively exploring and analyzing data. However, it does mean that when you're writing your own functions that build on tidyverse functions, you need to handle the code a bit differently.  
+
+First we'll make a simple plot. I'm not claiming that this is pretty.  
+
+```{r}
+ggplot(wq_trimmed) +
+  geom_point(aes(x = sal, 
+                 y = do_pct, 
+                 col = station_code))
+```
+
+
+Say we want to make this plot for a variety of pairs of parameters, with a third to provide color. So these are three arguments that we want to be able to specify. When we use RStudio's menu to extract a function, it gives us four - it includes the data frame as the first argument (it may not always be called `wq_trimmmed`) - and it looks like this:    
+
+```{r}
+my_plot <- function(wq_trimmed, sal, 
+                    do_pct, station_code) {
+  ggplot(wq_trimmed) +
+    geom_point(aes(x = sal, 
+                   y = do_pct, 
+                   col = station_code))
+}
+```
+
+
+So let's change some names and see what happens.  
+
+```{r}
+my_plot <- function(data, param1, 
+                    param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = param1, 
+                   y = param2, 
+                   col = param3))
+}
+```
+
+
+
+
+Let's see what happens when we try.....
+
+```{r, eval = FALSE}
+my_plot(wq_trimmed, sal, do_pct, station_code)
+```
+
+
+Working interactively in the tidyverse is easy because it bypasses some of the rules that R uses to associate function arguments with names in the data. This makes it a bit trickier to use some of our favorite tidyverse functions inside functions that we write. Recently, however, tidyverse developers made it easier to deal with this problem; and now we need to simply wrap the arguments that will change inside two curly braces `{{ }}`.  
+
+```{r}
+my_plot <- function(data, param1, 
+                    param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = {{ param1 }}, 
+                   y = {{ param2 }}, 
+                   col = {{ param3 }})) 
+}
+
+my_plot(wq_trimmed, sal, do_pct, station_code)
+my_plot(wq_trimmed, sal, do_pct, month)  
+
+my_plot(wq_trimmed, sal, do_pct, factor(month))  # or we can just force it for this one function call
+
+# try it yourself!  
+```
+
+If in doubt, "embrace" it! `{{ }}`
+
+
+
+#### Aside  
+
+Note that to facet, it's not quite as simple, and you have to use `var( {{ }} )`, without the `~`, inside your function. I don't know why, but this answer in the [RStudio Community forum](https://community.rstudio.com/t/problem-with-facet-wrap-and-curly-curly/36975) helped me figure it out.  
+
+```{r}
+my_plot <- function(data, param1, param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = {{param1}}, y = {{param2}}, col = {{param3}})) +
+    facet_wrap(vars( {{param3}} ))
+}
+
+my_plot(wq_trimmed, sal, do_pct, station_code)
+my_plot(wq_trimmed, sal, do_pct, month)
+```
+
+
+#### end aside
+
+
+# Your Turn 2  
+
+Add theme elements to the plot in your `my_plot` function to make it a plot you actually *want* to reproduce. Then use your function on at least two combinations of parameters (we suggest `do_pct` vs `temp`, and `do_pct` vs `sal`).  
+
+```{r}
+
+```
+
+

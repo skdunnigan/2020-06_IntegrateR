@@ -1,0 +1,204 @@
+---
+title: "Loops"
+author: "Cressman and Dunningan | Integrate R | June 2020"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+    df_print: tibble
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+library(here)
+library(ggplot2)
+
+ebird <- read.csv(here::here("data", "eBird_workshop.csv"), stringsAsFactors = FALSE)
+ebird <- dplyr::distinct(ebird)
+
+wq <- read.csv(here::here("data", "daily_wq.csv"), stringsAsFactors = FALSE)
+wq_trimmed <- wq %>%
+    select(station_code, month, day, temp, sal, do_pct, depth) %>%
+    filter(!is.na(depth)) %>%
+    mutate(depth_ft = depth * 3.28,
+           temp_f = (9/5) * temp + 32)
+```
+
+# For Loops  
+
+Sometimes you want to run a function on several different data frames. There are, as tends to be the case with R, many ways to do this. The one we will discuss today is the "for loop":  **For** `each thing` **in** `some set of things`, **do** `something`.  
+
+If you already hate or soon grow to hate for loops, check out the `purrr` package (this is a tidyverse solution; there are several good tutorials online) and/or the `apply` family of functions (base R).  
+
+
+Some things about for loops in R:  
+
++  the index starts at 1  (in other languages indexing starts at 0)  
++  if you want to save the results, you have to pre-allocate the output
+
+
+A very simple thing to do with a for loop is print each element of it.  
+
+```{r}
+for(i in 1:10){
+  print(i)
+}
+```
+
+
+Let's make a vector of fruit types, and use a loop to print each fruit. Notice that here, we don't want to print the value of `i` itself, but we want to print the `i`th member of something. So we use square brackets `[ ]` around `i`.    
+
+```{r}
+fruits <- c("apple", "banana", "canteloupe")
+
+for(i in 1:length(fruits)){
+  print(fruits[i])
+}
+```
+
+
+A "safer" way to describe the elements you're iterating over is the `seq_along` function instead of `1:something`. This way, if for some reason you have an empty vector, you won't confuse R.  
+
+
+```{r}
+for(i in seq_along(fruits)){
+  print(fruits[i])
+}
+```
+
+
+As with functions, it's a good idea to get some code working before you write it into a loop. And before you get too far: manually set `i`, run only the code inside the curly braces, and make sure you get the output you expect:  
+
+```{r}
+i <- 1
+
+# want to see it use "apple"
+
+  print(fruits[i])
+
+```
+
+```{r}
+i <- 2
+
+# want to see it use "banana"
+
+  print(fruits[i])
+
+```
+
+
+
+# Your Turn 1  
+
+Imagine you've never heard of `ggplot2`'s `facet` capabilities, and you want to make a separate "`my_plot`" for each station in the dataset. (Note that I've copied in the bare-bones function from the functions script; feel free to update with your modifications.)    
+
+```{r}
+my_plot <- function(data, param1, param2, param3) {
+  ggplot(data) +
+    geom_point(aes(x = {{param1}}, y = {{param2}}, col = {{param3}})) 
+}
+```
+
+
+First, make a vector of unique `station_code`s in `wq_trimmed` (Hint: look up the function `unique`).
+
+```{r, eval = FALSE}
+my_stns <- 
+```
+
+Now, fill in the skeleton below of a loop to print out `my_plot` for each station.  
+
+```{r, eval = FALSE}
+for(i in ----(my_stns)){
+  wq_sub <- wq_trimmed %>% 
+    ------(station_code == my_stns[i])
+  
+  print(my_plot(wq_sub, sal, do_pct, station_code))
+}
+```
+
+
+
+## pre-allocating memory for output  
+
+If you want to save the results of the output (as opposed to just printing them to your screen), you need to set up some way to store that output *before* the loop itself. As an example, let's say you didn't remember that `group_by()` and `summarize()` exist, and you want to write a loop where you calculate the mean salinity for each station.  
+
+Here's how you could print it out.  
+
+```{r}
+my_stns <- unique(wq_trimmed$station_code)
+
+for(i in seq_along(my_stns)){
+  wq_sub <- wq_trimmed %>% 
+    filter(station_code == my_stns[i])
+  
+  print(my_stns[i])
+  print(mean(wq_sub$sal, na.rm = TRUE))
+}
+```
+
+But say we want to save those values for later. We can set up vectors for output. We want these to be the same length as the group over which we're iterating. (Note: you don't want to loop over a data frame; it gets very, very slow. It's better to make vectors and bind them together at the end, with `cbind`/`rbind` or `dplyr::bind_cols`/`bind_rows`.)    
+
+```{r}
+stns_out <- rep("dummy_value", length(my_stns))
+mean_sal_out <- rep(0, length(my_stns))
+
+stns_out; mean_sal_out
+```
+
+
+Now we use our for loop to write over each of those in turn.  
+
+```{r}
+for(i in seq_along(my_stns)){
+  wq_sub <- wq_trimmed %>% 
+    filter(station_code == my_stns[i])
+  
+  stns_out[i] <- my_stns[i]
+  mean_sal_out[i] <- mean(wq_sub$sal, na.rm = TRUE)
+}
+
+stns_out; mean_sal_out
+cbind(stns_out, mean_sal_out)
+```
+
+What have we done?  
+
++  replaced `print` with an object to store the value in  
++  used the `i` index value to specify *where* in that output vector we want the value from each iteration of the loop  
+
+
+# Your Turn 2  
+
+In one loop, calculate mean temperature and mean depth for each station, and print the results. Remember to set up output vectors first.  
+
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+***  
+***  
+
+## Extending this idea  
+
+This concept can be extended to files in a folder on your computer: read in a file, make a bunch of graphs, and save them out as a pdf. Or read in all your daily files for the week, append them together (look up `bind_rows()` in the `dplyr` package), and save out a single weekly file.    

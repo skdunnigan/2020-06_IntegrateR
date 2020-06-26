@@ -1,0 +1,338 @@
+---
+title: "Advanced Wrangling: Joins and Bindings"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+In this lesson, we will go through some different ways to join data frames together. This RMarkdown file is used in conjunction with the "03_Joins.pptx" slide deck.  
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+# Your Turn 1: Make the data  
+
+We will be using a few data frames here. First, run this chunk of code to create the data frames you saw in the slide show. Examine the data frames.      
+
+```{r}
+band <- tribble(
+  ~name,     ~band,
+  "Mick",  "Stones",
+  "John", "Beatles",
+  "Paul", "Beatles"
+)
+
+instrument <- tribble(
+  ~name,   ~plays,
+  "John", "guitar",
+  "Paul",   "bass",
+  "Keith", "guitar"
+)
+
+instrument2 <- tribble(
+  ~artist,   ~plays,
+  "John", "guitar",
+  "Paul",   "bass",
+  "Keith", "guitar"
+)
+```
+
+
+Now, read in two files, both in your `data` folder. Make sure column names are all lower case and use underscores rather than periods or spaces (hint: `clean_names()` from Shannon's favorite package will help you here)      
+
++  fish  =  `guana_fish_subset.csv`  
++  critters  =  `critter_types.csv`  
+
+```{r}
+library(here)
+library(janitor)
+fish <- readr::read_csv(here::here('data', 'guana_fish_subset.csv')) %>% 
+  janitor::clean_names()
+
+critters <- readr::read_csv(here::here('data', 'critter_types.csv')) %>% 
+  janitor::clean_names()
+
+dplyr::glimpse(fish)
+dplyr::glimpse(critters)
+```
+
+
+# Code from slides  
+
+## Left Join  
+
+Keeps all rows from the "left" (first) data frame, and inserts columns from the right data frame. Inserts "NA" if there is no match in the right data frame.    
+
+```{r}
+band %>% 
+  left_join(instrument, by = "name")
+```
+
+.... is the same as:  
+
+```{r}
+left_join(band, instrument, by = "name")
+```
+
+
+## Right Join  
+
+Keeps all rows from the "right" (second) data frame.  
+
+```{r}
+band %>% 
+  right_join(instrument, by = "name")
+```
+
+
+## Full Join  
+
+Keeps all rows from both data frames.  
+
+```{r}
+band %>% 
+  full_join(instrument, by = "name")
+```
+
+
+## Inner Join  
+
+Keeps only rows that are complete in both data frames.  
+
+```{r}
+band %>% 
+  inner_join(instrument, by = "name")
+```
+
+
+# Different names in different data frames  
+
+What if we want to join two data frames, but the column we want to match on is named differently in each? 
+
+```{r}
+names(band)
+names(instrument2)
+```
+
+"name" in one data frame is the same as "artist" in the other.  
+
+Here's how you identify them:  
+
+```{r}
+band %>% 
+  left_join(instrument2, by = c("name" = "artist"))
+```
+
+
+# Your Turn 2: Join Guana Fish data to identifying information  
+
+Were more fish or invertebrates caught in this dataset? Does time of day (day vs. night) matter?  
+
+This has multiple parts. Do them separately at first if you need to, but then see if you can do this in a single series of pipes.  
+
+1.  Pivot the `fish` data frame to a longer version, where the count of each species within each sample event is in its own row. (Hint: remember you can select columns to pivot with `start:finish` notation.)  
+2.  Join the `critters` data frame to this long one, so that each row also identifies whether the critter is a fish or an invertebrate.  
+3.  Come up with a grand total number of fish vs. invertebrates caught, for day vs. night. (Hint: remember `group_by` and `summarize`!)
+
+```{r}
+ 
+  
+               
+                
+   
+   
+  
+
+```
+
+
+For bonus points, use a different pivot function to turn fish/invert into column names, so there are only two rows in the result.  
+
+```{r}
+ 
+  
+               
+                
+   
+   
+   
+  
+
+```
+
+
+
+# Binding rows: rbind and dplyr::bind_rows  
+
+# Toy data for binding  
+
+```{r}
+band2 <- tribble(
+  ~first, ~last, 
+  "Mick", "Jagger",
+  "John", "Lennon", 
+  "Paul", "McCartney"
+)
+
+band2b <- tribble(
+  ~first, ~last, 
+  "Ringo", "Starr",
+  "Keith", "Richards"
+)
+
+band3 <- tribble(
+  ~band, ~plays,
+  "Stones", "NA",
+  "Beatles", "guitar", 
+  "Beatles", "bass"
+)
+```
+
+
+Let's try gluing rows together with `rbind`. We have two data frames that are similar:    
+
+```{r}
+band2
+band2b
+```
+
+To get them into one big data frame: 
+
+```{r}
+rbind(band2, band2b)
+```
+
+
+The tidyverse version of this is `bind_rows()`, in the `dplyr` package:  
+
+```{r}
+bind_rows(band2, band2b)
+```
+
+When the data frames are well-behaved, they do the same thing.  
+
+What about when columns are different?  
+
+```{r}
+band2
+band3
+```
+
+
+# Your Turn 3:  
+
+Predict what will happen, and run this code.  
+
+```{r, eval = FALSE}
+rbind(band2, band3)
+```
+
+Fortunately, it recognizes that the column names are different, so it throws an error.  
+
+Do you think `bind_rows()` will do the same thing? Find out.  
+
+```{r}
+bind_rows(band2, band3)
+```
+
+Did these do what you expected? Or were you surprised? Type your answer in the chat box!  
+
+
+
+# Real data  
+
+Let's apply this to a real-world situation: data where each year is stored in its own file. 
+
+Here, we will read in three files and bind them in some different ways. I've already coded this for you; just run this code chunk.  
+
+```{r}
+bh2016 <- read.csv(here::here("data", "gndbhnut2016.csv"),
+                   stringsAsFactors = FALSE)
+bh2017 <- read.csv(here::here("data", "gndbhnut2017.csv"),
+                   stringsAsFactors = FALSE)
+bh2018 <- read.csv(here::here("data", "gndbhnut2018.csv"),
+                   stringsAsFactors = FALSE)
+
+bh_list <- list("bh2016" = bh2016, 
+                "bh2017" = bh2017, 
+                "bh2018" = bh2018)
+```
+
+
+# Your Turn 4  
+
+Bind the data frames `bh2016` and `bh2017` into one data frame. First use `rbind`, then use `bind_rows`. Do you see any difference? Use both `glimpse()` and `dim()` to compare.    
+
+```{r}
+bh_rbind <- 
+bh_bindrows <- 
+
+
+
+```
+
+
+Now try it with all 3 bh data frames. (Ignore the list for now). Use both `glimpse()` and `dim()` to compare.   
+
+```{r}
+bh_rbind <- 
+bh_bindrows <- 
+
+
+  
+  
+  
+```
+
+(Side recommendation: always verify that your code does what you expect it to! And if it doesn't, figure out why.)
+
+
+# Binding together a list  
+
+This is the really fun thing about dplyr::bind_rows.  
+
+Predict what will happen when you run the following code chunk, then see if you are right:  
+
+```{r}
+bh_bindrows <- bind_rows(bh_list)
+glimpse(bh_bindrows)
+dim(bh_bindrows)
+```
+
+
+What will happen if you use rbind instead?  
+
+```{r}
+bh_rbind <- rbind(bh_list)
+dim(bh_rbind)
+```
+
+The moral of the story is, `bind_rows` is more powerful than `rbind`, and you should always pay attention to what you're doing!  
+
+
+# Binding columns: cbind and bind_cols  
+
+This is similar to row binding, but we're squishing together columns - whether they match or not. So if you do this, make sure your rows have exactly the same order and meaning in whatever you're binding together! These functions simply use position.  
+
+```{r}
+cbind(band2, band3)
+```
+
+This is.... okay.... when you know everything matches. But it could lead to problems if you have the same number of rows, but they mean something different:  
+
+```{r}
+cbind(band, instrument)
+```
+
+
+## dplyr::bind_cols is the tidyverse alternative  
+
+```{r}
+bind_cols(band2, band3)
+```  
+
+
+These functions can come in handy if you've separated data to run something like a PCA, and want to join other information back to your results. You also might use them after running a 'for' loop to generate multiple vectors of output that you then want to join into a data frame.  
